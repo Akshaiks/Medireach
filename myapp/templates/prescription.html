@@ -1,0 +1,225 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<title>Medireach</title>
+	<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' />
+	<link rel="stylesheet" href="{% static 'assets/css/bootstrap.min.css' %}">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
+	<link rel="stylesheet" href="{% static 'assets/css/ready.css' %}">
+	<link rel="stylesheet" href="{% static 'assets/css/demo.css' %}">
+	<style>
+.card {
+        border: 1px solid #007bff;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 123, 255, 0.2);
+        overflow: hidden;
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 16px rgba(0, 123, 255, 0.3);
+    }
+
+    .card-header {
+        background-color: #007bff;
+        color: #fff;
+        padding: 15px;
+        font-size: 20px;
+        font-weight: bold;
+        text-align: center;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .card-body {
+        padding: 20px;
+        font-size: 16px;
+        color: #333;
+        line-height: 1.6;
+    }
+
+    .card-body p {
+        margin-bottom: 10px;
+    }
+
+    .form-group label {
+        font-weight: bold;
+        color: #555;
+    }
+
+    .form-control {
+        border-radius: 5px;
+        border: 1px solid #ddd;
+        box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+        color: #fff;
+        padding: 10px 20px;
+        border-radius: 5px;
+        transition: background-color 0.3s, box-shadow 0.3s;
+    }
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+        box-shadow: 0 4px 12px rgba(0, 86, 179, 0.2);
+    }
+	</style>
+</head>
+<body>
+	<div class="wrapper">
+		<div class="main-header">
+			<div class="logo-header">
+				<a href="index.html" class="logo">
+					Welcome
+				</a>
+				<button class="navbar-toggler sidenav-toggler ml-auto" type="button" data-toggle="collapse" data-target="collapse" aria-controls="sidebar" aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<button class="topbar-toggler more"><i class="la la-ellipsis-v"></i></button>
+			</div>
+			<nav class="navbar navbar-header navbar-expand-lg">
+				<div class="container-fluid">
+					<a style="margin-left: 710px; font-size: 32px; font-weight: 800;" class="navbar-brand" href="#">Medireach</a>
+					<ul class="navbar-nav topbar-nav ml-md-auto align-items-center">
+					</ul>
+				</div>
+			</nav>
+		</div>
+		<div class="sidebar">
+            <div class="scrollbar-inner sidebar-wrapper">
+                <div class="user">
+                    
+                    <div class="info">
+                        <a class="" data-toggle="collapse" href="#collapseExample" aria-expanded="true">
+                            <span>
+                                PROFILE
+                                <span class="caret"></span>
+                            </span>
+                        </a>
+                        <div class="clearfix"></div>
+
+                        <div class="collapse in" id="collapseExample" aria-expanded="true" >
+                            <ul class="nav">
+                                
+                                <li>
+                                    <a href="{% url 'profile_view' %}">
+                                        <span class="link-collapse">Edit Profile</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <ul class="nav">
+                    <li class="nav-item ">
+                        <a href="{% url 'index' %}">
+                            <i class="la la-dashboard"></i>
+                            <p>Home</p>
+                        </a>
+                    </li>
+                    <li class="nav-item ">
+                        <a href="{% url 'video_consultation_user' %}">
+                            <i class="la la-hospital-o"></i>
+                            <p>Request Consultation</p>
+                        </a>
+                    </li>
+                    <li class="nav-item ">
+                        <a href="{% url 'medical_history' %}">
+                            <i class="la la-history"></i>
+                            <p>Medical history</p>
+                        </a>
+                    </li>
+                    <li class="nav-item active">
+                        <a href="{% url 'prescription_view' %}">
+                            <i class="la la-history"></i>
+                            <p>Prescription</p>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="nav-item">
+                        <a href="{% url 'signout' %}">
+                            <i class="la la-sign-out"></i>
+                            <p>Logout</p>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+		<!-- Main Panel -->
+		<div style="margin-top: 50px;" class="main-panel">
+            <div class="content">
+                <div class="container-fluid">
+                    <!-- Prescription Card -->
+                    <div class="row justify-content-center">
+                        <div class="col-md-8">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-title">
+                                        {% if latest_prescription %}
+                                            Prescription Details
+                                        {% else %}
+                                            Enter Prescription
+                                        {% endif %}
+                                    </h5>
+                                </div>
+                                <div class="card-body">
+                                    {% if latest_prescription %}
+                                        <p><strong>Patient Name:</strong> {{ latest_prescription.patient_name }}</p>
+                                        <p><strong>Disease Name:</strong> {{ latest_prescription.disease_name }}</p>
+                                        <p><strong>Medicine:</strong> {{ latest_prescription.medicine }}</p>
+                                        <p><strong>Description:</strong> {{ latest_prescription.description }}</p>
+                                        <p><strong>Created At:</strong> {{ latest_prescription.created_at }}</p>
+                                    {% else %}
+                                        <form method="POST" action="{% url 'upload_prescription' %}">
+                                            {% csrf_token %}
+                                            <div class="form-group">
+                                                <label for="patient_name">Patient Name</label>
+                                                <input type="text" class="form-control" id="patient_name" name="patient_name" required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="disease_name">Disease Name</label>
+                                                <input type="text" class="form-control" id="disease_name" name="disease_name" required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="medicine">Medicine</label>
+                                                <input type="text" class="form-control" id="medicine" name="medicine" required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="description">Description</label>
+                                                <textarea class="form-control" id="description" name="description" rows="4" required></textarea>
+                                            </div>
+                                            <button type="submit" class="btn btn-primary">Upload Prescription</button>
+                                        </form>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+
+    <footer class="footer bg-light text-center py-3">
+        <div class="container">
+            <div class="copyright">
+                &copy; 2024 Medireach.<i class="la la-heart text-danger"></i> All rights reserved
+           </div>
+        </div>
+    </footer>
+
+	<!-- Scripts -->
+	<script src="{% static 'assets/js/core/jquery.3.2.1.min.js' %}"></script>
+	<script src="{% static 'assets/js/core/popper.min.js' %}"></script>
+	<script src="{% static 'assets/js/core/bootstrap.min.js' %}"></script>
+	<script src="{% static 'assets/js/ready.min.js' %}"></script>
+</body>
+</html>

@@ -1,0 +1,257 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <title>Medireach</title>
+    <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' />
+    <link rel="stylesheet" href="{% static 'assets/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
+    <link rel="stylesheet" href="{% static 'assets/css/ready.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/demo.css' %}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+
+        .card:hover {
+            transform: scale(1.05);
+        }
+
+        .card-img-top {
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .card-title {
+            font-weight: bold;
+            color: #007bff;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="main-header">
+            <div class="logo-header">
+                <a href="index.html" class="logo">Welcome</a>
+                <button class="navbar-toggler sidenav-toggler ml-auto" type="button" data-toggle="collapse" data-target="collapse" aria-controls="sidebar" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <button class="topbar-toggler more"><i class="la la-ellipsis-v"></i></button>
+            </div>
+            <nav class="navbar navbar-header navbar-expand-lg">
+                <div class="container-fluid">
+                    <a style="margin-left: 710px; font-size: 32px; font-weight: 800;" class="navbar-brand" href="#">Medireach</a>
+                </div>
+            </nav>
+        </div>
+        <div class="sidebar">
+            <div class="scrollbar-inner sidebar-wrapper">
+                <ul class="nav">
+                    <li class="nav-item ">
+                        <a href="{% url 'index_d' %}">
+                            <i class="la la-dashboard"></i>
+                            <p>Home</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'video_consultation_requests' %}">
+                            <i class="la la-hospital-o"></i>
+                            <p>Consultation Requests</p>
+                        </a>
+                    </li>
+                    <li class="nav-item active">
+                        <a href="{% url 'medical_history_d' %}">
+                            <i class="la la-history"></i>
+                            <p>Medical history</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'prescription_d' %}">
+                            <i class="la la-history"></i>
+                            <p>Prescription</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'signout' %}">
+                            <i class="la la-sign-out"></i>
+                            <p>Logout</p>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div style="margin-top: 50px;" class="main-panel">
+            <div class="container mt-4">
+                <h1 class="text-center">Medical Data Dashboard</h1>
+                <div class="row justify-content-center">
+                    <div class="col-md-4">
+                        <button id="live-data-btn" class="btn btn-primary w-100 mb-3" onclick="showLiveData()">Live Data</button>
+                    </div>
+                    <div class="col-md-4">
+                        <button id="history-data-btn" class="btn btn-secondary w-100 mb-3" onclick="showHistoryData()">History</button>
+                    </div>
+                </div>
+                <!-- User selection section -->
+                <div id="user-buttons-container" class="row justify-content-center mb-3">
+                    <!-- Dynamically populated user buttons will appear here -->
+                </div>
+                <div id="live-data-section" class="chart-section" style="display: block;">
+                    <h3 class="text-center">Live Data</h3>
+                    <canvas id="liveChart" width="400" height="200"></canvas>
+                </div>
+                <div id="history-data-section" class="chart-section" style="display: none;">
+                    <h3 class="text-center">Previous History</h3>
+                    <canvas id="historyChart" width="400" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer class="footer bg-light text-center py-3">
+        <div class="container">
+            <div class="copyright">&copy; 2024 Medireach.<i class="la la-heart text-danger"></i> All rights reserved</div>
+        </div>
+    </footer>
+    <script src="{% static 'assets/js/core/jquery.3.2.1.min.js' %}"></script>
+    <script src="{% static 'assets/js/core/popper.min.js' %}"></script>
+    <script src="{% static 'assets/js/core/bootstrap.min.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    let liveChart, historyChart;
+
+    // Initialize the live data chart
+    function initCharts() {
+        const liveCtx = document.getElementById('liveChart').getContext('2d');
+        liveChart = new Chart(liveCtx, {
+            type: 'line',
+            data: {
+                labels: ['Temperature', 'Heart rate', 'SPO2', 'Systolic pressure', 'Diastolic pressure'],
+                datasets: [{
+                    label: 'Live Data',
+                    data: [], // Initial empty data
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        const historyCtx = document.getElementById('historyChart').getContext('2d');
+        historyChart = new Chart(historyCtx, {
+            type: 'line',
+            data: {
+                labels: [], // Assuming you will have date or time labels for history
+                datasets: [
+                    { label: 'Temperature', data: [], borderColor: 'red', fill: false },
+                    { label: 'Heart rate', data: [], borderColor: 'blue', fill: false },
+                    { label: 'SPO2', data: [], borderColor: 'green', fill: false },
+                    { label: 'Systolic pressure', data: [], borderColor: 'purple', fill: false },
+                    { label: 'Diastolic pressure', data: [], borderColor: 'orange', fill: false }
+                ]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    }
+
+    function fetchUserData(username) {
+        // Fetch live data for the selected username
+        fetch(`/live_sensor_data_d/${username}/`)
+            .then(response => response.json())
+            .then(data => {
+                // Update the live data chart
+                liveChart.data.datasets[0].data = [
+                    data.Temperature,
+                    data['Heart rate'],
+                    data['SPO2'],
+                    data['Systolic pressure'],
+                    data['Diastolic pressure']
+                ];
+                liveChart.update();
+            })
+            .catch(error => console.error('Error fetching live data:', error));
+
+        // Fetch historical data for the selected username
+        fetch(`/get_history_data_d/${username}/`)
+        .then(response => response.json())
+        .then(data => {
+            // Ensure data consistency
+            const dates = data.Dates.map(date => new Date(date).toLocaleString());
+            const temperature = data.Temperature.map(val => parseFloat(val));
+            const heartRate = data['Heart rate'].map(val => parseFloat(val));
+            const spo2 = data['SPO2'].map(val => parseFloat(val));
+            const systolicPressure = data['Systolic pressure'].map(val => parseFloat(val));
+            const diastolicPressure = data['Diastolic pressure'].map(val => parseFloat(val));
+
+            // Update the history chart
+            historyChart.data.labels = dates;
+            historyChart.data.datasets[0].data = temperature;
+            historyChart.data.datasets[1].data = heartRate;
+            historyChart.data.datasets[2].data = spo2;
+            historyChart.data.datasets[3].data = systolicPressure;
+            historyChart.data.datasets[4].data = diastolicPressure;
+
+            historyChart.update();
+        })
+        .catch(error => console.error('Error fetching history data:', error));
+    }
+
+    function showLiveData() {
+        document.getElementById('live-data-section').style.display = 'block';
+        document.getElementById('history-data-section').style.display = 'none';
+    }
+
+    function showHistoryData() {
+        document.getElementById('live-data-section').style.display = 'none';
+        document.getElementById('history-data-section').style.display = 'block';
+    }
+
+    // Function to populate the list of usernames (buttons) dynamically
+    function populateUserButtons(users) {
+        const container = document.getElementById('user-buttons-container');
+        container.innerHTML = ''; // Clear existing buttons
+
+        users.forEach(username => {
+            const button = document.createElement('button');
+            button.className = 'btn btn-secondary m-2';
+            button.textContent = username;
+            button.onclick = function() {
+                fetchUserData(username); 
+            };
+            container.appendChild(button);
+        });
+    }
+
+    // Initialize charts when the page loads
+    window.onload = function() {
+        initCharts();
+
+        // Example: Fetch the list of users from your Django backend and populate the buttons
+        fetch('/get_users/')  // Adjust this URL to return a list of usernames
+            .then(response => response.json())
+            .then(users => {
+                populateUserButtons(users);
+            })
+            .catch(error => console.error('Error fetching user list:', error));
+    }
+</script>
+
+    
+</body>
+</html>

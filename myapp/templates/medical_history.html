@@ -1,0 +1,445 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <title>Medireach</title>
+    <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' />
+    <link rel="stylesheet" href="{% static 'assets/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
+    <link rel="stylesheet" href="{% static 'assets/css/ready.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/demo.css' %}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+ 
+   
+    /* Styling the table */
+    #historyTable {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    #historyTable th, #historyTable td {
+        border: 1px solid #ddd;
+        padding: 12px;
+        text-align: center;
+    }
+
+    #historyTable th {
+        background-color: #007bff; /* Blue color for column names */
+        color: white;
+        font-weight: bold;
+    }
+
+    #historyTable td {
+        background-color: #f9f9f9;
+    }
+
+    #historyTable tr:nth-child(even) td {
+        background-color: #f2f2f2;
+    }
+
+    #historyTable tr:hover td {
+        background-color: #e0e0e0;
+    }
+
+        .card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+
+        .card:hover {
+            transform: scale(1.05);
+        }
+
+        .card-img-top {
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .card-title {
+            font-weight: bold;
+            color: #007bff;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="main-header">
+            <div class="logo-header">
+                <a href="index.html" class="logo">Welcome</a>
+                <button class="navbar-toggler sidenav-toggler ml-auto" type="button" data-toggle="collapse" data-target="collapse" aria-controls="sidebar" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <button class="topbar-toggler more"><i class="la la-ellipsis-v"></i></button>
+            </div>
+            <nav class="navbar navbar-header navbar-expand-lg">
+                <div class="container-fluid">
+                    <a style="margin-left: 710px; font-size: 32px; font-weight: 800;" class="navbar-brand" href="#">Medireach</a>
+                </div>
+            </nav>
+        </div>
+        <div class="sidebar">
+            <div class="scrollbar-inner sidebar-wrapper">
+                <div class="user">
+                    <div class="info">
+                        <a class="" data-toggle="collapse" href="#collapseExample" aria-expanded="true">
+                            <span>
+                                PROFILE
+                                <span class="caret"></span>
+                            </span>
+                        </a>
+                        <div class="clearfix"></div>
+
+                        <div class="collapse in" id="collapseExample" aria-expanded="true" >
+                            <ul class="nav">
+                                
+                                <li>
+                                    <a href="{% url 'profile_view' %}">
+                                        <span class="link-collapse">Edit Profile</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <ul class="nav">
+                    <li class="nav-item ">
+                        <a href="{% url 'index' %}">
+                            <i class="la la-dashboard"></i>
+                            <p>Home</p>
+                        </a>
+                    </li>
+                    <li class="nav-item ">
+                        <a href="{% url 'video_consultation_user' %}">
+                            <i class="la la-hospital-o"></i>
+                            <p>Request Consultation</p>
+                        </a>
+                    </li>
+                    <li class="nav-item active">
+                        <a href="{% url 'medical_history' %}">
+                            <i class="la la-history"></i>
+                            <p>Medical history</p>
+                        </a>
+                    </li>
+                    <li class="nav-item ">
+                        <a href="{% url 'prescription_view' %}">
+                            <i class="la la-history"></i>
+                            <p>Prescription</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'signout' %}">
+                            <i class="la la-sign-out"></i>
+                            <p>Logout</p>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div style="margin-top: 50px;" class="main-panel">
+            <div class="container mt-4">
+                <h1 class="text-center">Medical Data Dashboard</h1>
+                <div class="row justify-content-center">
+                    <div class="col-md-4">
+                        <button id="live-data-btn" class="btn btn-primary w-100 mb-3" onclick="showLiveData()">Live Data</button>
+                    </div>
+                    <div class="col-md-4">
+                        <button id="history-data-btn" class="btn btn-secondary w-100 mb-3" onclick="showHistoryData()">History</button>
+                    </div>
+                </div>
+                <div id="live-data-section" class="chart-section" style="display: block;">
+                    <h3 class="text-center">Live Data</h3>
+                    <canvas id="liveChart" width="400" height="200"></canvas>
+              
+                    <canvas id="liveBarChart" style="margin-top: 30px;"></canvas> 
+
+                </div>
+                <div id="history-data-section" class="chart-section" style="display: none;">
+                    <h3 class="text-center">Previous History</h3>
+                    <!-- Removed the chart section here -->
+                    <table id="historyTable" class="table table-bordered mt-4">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Temperature</th>
+                                <th>Heart Rate</th>
+                                <th>Systolic Pressure</th>
+                                <th>Diastolic Pressure</th>
+                                <th>SPO2</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- History data will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer class="footer bg-light text-center py-3">
+        <div class="container">
+            <div class="copyright">&copy; 2024 Medireach.<i class="la la-heart text-danger"></i> All rights reserved</div>
+        </div>
+    </footer>
+    <script src="{% static 'assets/js/core/jquery.3.2.1.min.js' %}"></script>
+    <script src="{% static 'assets/js/core/popper.min.js' %}"></script>
+    <script src="{% static 'assets/js/core/bootstrap.min.js' %}"></script>
+    <script>
+        // Initialize charts globally
+        let liveChart, liveBarChart, historyChart;
+    
+        // Function to initialize the charts
+        function initCharts() {
+            // Live data line chart
+            const liveCtx = document.getElementById('liveChart').getContext('2d');
+            liveChart = new Chart(liveCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Temperature', 'Heart rate', 'SPO2', 'Systolic pressure', 'Diastolic pressure'],
+                    datasets: [{
+                        label: 'Live Data',
+                        data: [], // Initial empty data
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: { beginAtZero: true }
+                    }
+                }
+            });
+    
+            // Live data bar chart
+            const liveBarCtx = document.getElementById('liveBarChart').getContext('2d');
+            liveBarChart = new Chart(liveBarCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Temperature', 'Heart rate', 'SPO2', 'Systolic pressure', 'Diastolic pressure'],
+                    datasets: [{
+                        label: 'Live Data',
+                        data: [], // Initial empty data
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(75, 192, 192, 0.2)',
+                            'rgba(153, 102, 255, 0.2)', 'rgba(255, 159, 64, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)', 'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)', 'rgba(255, 159, 64, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: { beginAtZero: true }
+                    }
+                }
+            });
+    
+            // Historical data chart (unchanged)
+            const historyCtx = document.getElementById('historyChart').getContext('2d');
+            historyChart = new Chart(historyCtx, {
+                type: 'line',
+                data: {
+                    labels: [], // Assuming you will have date or time labels for history
+                    datasets: [
+                        { label: 'Temperature', data: [], borderColor: 'red', fill: false },
+                        { label: 'Heart rate', data: [], borderColor: 'blue', fill: false },
+                        { label: 'SPO2', data: [], borderColor: 'green', fill: false },
+                        { label: 'Systolic pressure', data: [], borderColor: 'purple', fill: false },
+                        { label: 'Diastolic pressure', data: [], borderColor: 'orange', fill: false }
+                    ]
+                },
+                options: {
+                    scales: {
+                        y: { beginAtZero: true }
+                    }
+                }
+            });
+        }
+
+        
+
+            
+
+        // Function to fetch live data from the server
+        function fetchLiveData() {
+            fetch('/medical_history/live_sensor_data')
+                .then(response => response.json())
+                .then(data => {
+                    if (data) {
+                        updateLiveCharts(data);
+                    } else {
+                        console.error("Error: No data received.");
+                    }
+                })
+                .catch(error => console.error("Error fetching live data:", error));
+        }
+    
+        // Function to update both live charts (line and bar)
+        function updateLiveCharts(data) {
+            const liveData = {
+                labels: ['Temperature', 'Heart Rate', 'SPO2', 'Systolic Pressure', 'Diastolic Pressure'],
+                datasets: [{
+                    label: 'Live Data',
+                    data: [
+                        data.Temperature || 0,  // Fallback value if data is missing
+                        data["Heart rate"] || 0,
+                        data["SPO2"] || 0,
+                        data["Systolic pressure"] || 0,
+                        data["Diastolic pressure"] || 0
+                    ],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)', 'rgba(255, 159, 64, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)', 'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)', 'rgba(255, 159, 64, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            };
+    
+            // Update live line chart
+            if (!liveChart) {
+                const ctx = document.getElementById('liveChart').getContext('2d');
+                liveChart = new Chart(ctx, {
+                    type: 'line',
+                    data: liveData,
+                    options: {
+                        scales: { y: { beginAtZero: true } }
+                    }
+                });
+            } else {
+                liveChart.data = liveData;
+                liveChart.update();
+            }
+    
+            // Update live bar chart
+            if (!liveBarChart) {
+                const ctx = document.getElementById('liveBarChart').getContext('2d');
+                liveBarChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: liveData,
+                    options: {
+                        scales: { y: { beginAtZero: true } }
+                    }
+                });
+            } else {
+                liveBarChart.data = liveData;
+                liveBarChart.update();
+            }
+        }
+    
+        // Fetch historical data and display it in a table (unchanged)
+        function fetchHistoryData() {
+            fetch('/medical_history/get_history_data')
+                .then(response => response.json())
+                .then(data => {
+                    console.log("Historical Data:", data);
+                    displayHistoryData(data);
+                })
+                .catch(error => console.error("Error fetching history data:", error));
+        }
+    
+        function displayHistoryData(data) {
+            const historyTable = document.getElementById('historyTable').getElementsByTagName('tbody')[0];
+            historyTable.innerHTML = '';
+        
+            data['Temperature'].forEach((temp, index) => {
+                const row = historyTable.insertRow();
+                row.insertCell(0).textContent = new Date().toLocaleString();
+                row.insertCell(1).textContent = temp;
+                row.insertCell(2).textContent = data['Heart rate'][index];
+                row.insertCell(3).textContent = data['Systolic pressure'][index];
+                row.insertCell(4).textContent = data['Diastolic pressure'][index];
+                row.insertCell(5).textContent = data['SPO2'][index];
+            });
+        }
+    
+        // Show live data section and hide history data section (unchanged)
+        function showLiveData() {
+            document.getElementById('live-data-section').style.display = 'block';
+            document.getElementById('history-data-section').style.display = 'none';
+        }
+    
+        // Show history data section and hide live data section (unchanged)
+        function showHistoryData() {
+            document.getElementById('live-data-section').style.display = 'none';
+            document.getElementById('history-data-section').style.display = 'block';
+            fetchHistoryData();  // Fetch history data when showing the section
+        }
+    
+        // Fetch current user data and update charts (unchanged)
+        function fetchCurrentUserData() {
+            fetch('/get_current_user/')
+                .then(response => response.json())
+                .then(currentUser => {
+                    const username = currentUser.username;
+                    
+                    fetch(`/live_sensor_data_d/${username}/`)
+                        .then(response => response.json())
+                        .then(data => {
+                            liveChart.data.datasets[0].data = [
+                                data.Temperature,
+                                data['Heart rate'],
+                                data['SPO2'],
+                                data['Systolic pressure'],
+                                data['Diastolic pressure']
+                            ];
+                            liveChart.update();
+                            liveBarChart.data.datasets[0].data = [
+                                data.Temperature,
+                                data['Heart rate'],
+                                data['SPO2'],
+                                data['Systolic pressure'],
+                                data['Diastolic pressure']
+                            ];
+                            liveBarChart.update();
+                        })
+                        .catch(error => console.error('Error fetching live data:', error));
+        
+                    fetch(`/get_history_data_d/${username}/`)
+                        .then(response => response.json())
+                        .then(data => {
+                            const dates = data.Dates.map(date => new Date(date).toLocaleString());
+                            const temperature = data.Temperature.map(val => parseFloat(val));
+                            const heartRate = data['Heart rate'].map(val => parseFloat(val));
+                            const spo2 = data['SPO2'].map(val => parseFloat(val));
+                            const systolicPressure = data['Systolic pressure'].map(val => parseFloat(val));
+                            const diastolicPressure = data['Diastolic pressure'].map(val => parseFloat(val));
+        
+                            historyChart.data.labels = dates;
+                            historyChart.data.datasets[0].data = temperature;
+                            historyChart.data.datasets[1].data = heartRate;
+                            historyChart.data.datasets[2].data = spo2;
+                            historyChart.data.datasets[3].data = systolicPressure;
+                            historyChart.data.datasets[4].data = diastolicPressure;
+        
+                            historyChart.update();
+                        })
+                        .catch(error => console.error('Error fetching history data:', error));
+                })
+                .catch(error => console.error('Error fetching current user:', error));
+        }
+    
+        // Initialize charts and fetch current user data when the page loads
+        window.onload = function() {
+            initCharts();
+            fetchCurrentUserData();
+        };
+    
+        // Set interval to fetch live data every 5 seconds
+        setInterval(fetchLiveData, 5000);
+    </script>
+    
+    
+    
+</body>
+</html>

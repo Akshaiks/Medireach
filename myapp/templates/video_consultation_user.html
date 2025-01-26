@@ -1,0 +1,173 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<title>Medireach</title>
+	<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' />
+	<link rel="stylesheet" href="{% static 'assets/css/bootstrap.min.css' %}">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
+	<link rel="stylesheet" href="{% static 'assets/css/ready.css' %}">
+	<link rel="stylesheet" href="{% static 'assets/css/demo.css' %}">
+	<style>
+		.card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s;
+}
+
+.card:hover {
+    transform: scale(1.05);
+}
+
+.card-img-top {
+    height: 200px;
+    object-fit: cover;
+}
+
+.card-title {
+    font-weight: bold;
+    color: #007bff;
+}
+
+	</style>
+</head>
+<body>
+	<div class="wrapper">
+		<div class="main-header">
+			<div class="logo-header">
+				<a href="index.html" class="logo">
+					Welcome
+				</a>
+				<button class="navbar-toggler sidenav-toggler ml-auto" type="button" data-toggle="collapse" data-target="collapse" aria-controls="sidebar" aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<button class="topbar-toggler more"><i class="la la-ellipsis-v"></i></button>
+			</div>
+			<nav class="navbar navbar-header navbar-expand-lg">
+				<div class="container-fluid">
+					
+					<a style="margin-left: 710px; font-size: 32px; font-weight: 800;" class="navbar-brand" href="#">Medireach</a>
+			
+					<ul class="navbar-nav topbar-nav ml-md-auto align-items-center">
+						
+					</ul>
+				</div>
+			</nav>
+			
+			</div>
+			<div class="sidebar">
+				<div class="scrollbar-inner sidebar-wrapper">
+					<div class="user">
+						
+						<div class="info">
+							<a class="" data-toggle="collapse" href="#collapseExample" aria-expanded="true">
+								<span>
+									PROFILE
+									<span class="caret"></span>
+								</span>
+							</a>
+							<div class="clearfix"></div>
+
+							<div class="collapse in" id="collapseExample" aria-expanded="true" >
+								<ul class="nav">
+									
+									<li>
+										<a href="{% url 'profile_view' %}">
+											<span class="link-collapse">Edit Profile</span>
+										</a>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<ul class="nav">
+						<li class="nav-item ">
+							<a href="{% url 'index' %}">
+								<i class="la la-dashboard"></i>
+								<p>Home</p>
+							</a>
+						</li>
+						<li class="nav-item active ">
+							<a href="{% url 'video_consultation_user' %}">
+								<i class="la la-hospital-o"></i>
+								<p>Request Consultation</p>
+							</a>
+						</li>
+						<li class="nav-item">
+							<a href="{% url 'medical_history' %}">
+								<i class="la la-history"></i>
+								<p>Medical history</p>
+							</a>
+						</li>
+						<li class="nav-item">
+							<a href="{% url 'prescription_view' %}">
+								<i class="la la-history"></i>
+								<p>Prescription</p>
+							</a>
+						</li>
+						<li class="nav-item">
+							<a href="{% url 'signout' %}">
+								<i class="la la-sign-out"></i>
+								<p>Logout</p>
+							</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		<!-- Main Panel -->
+		<div style="margin-top: 50px;" class="main-panel">
+			<div class="content">
+				<div class="container-fluid">
+					<!-- Video Consultation Card -->
+					<div class="row justify-content-center">
+						<div class="col-md-4">
+							<div class="card">
+								<img class="card-img-top" src="{% static 'assets/img/consult.jpg' %}" alt="Video Consultation">
+								<div class="card-body">
+									<h5 class="card-title">Video Consultation</h5>
+									<p class="card-text">
+										Once your request is approved by the doctor, you will receive an email with a link to join the video consultation. 
+										You can consult with the doctor remotely, ensuring easy and accessible healthcare.
+									</p>
+									<form method="POST" action="{% url 'request_send' %}">
+										{% csrf_token %}
+										<button type="submit" class="btn btn-primary">Request</button>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+					{% if video_consultation %}
+					<div class="row justify-content-center">
+						<div class="col-md-4">
+							<div class="card">
+								<div class="card-body">
+									<h5 class="card-title">Consultation Details</h5>
+									<p><strong>Google Meet URL:</strong> <a href="{{ video_consultation.gmeet_url }}" target="_blank">{{ video_consultation.gmeet_url }}</a></p>
+									<p><strong>Time:</strong> {{ video_consultation.request_time }}</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					{% endif %}
+				</div>
+			</div>
+		</div>
+	</div>
+    <footer class="footer bg-light text-center py-3">
+        <div class="container">
+            <div class="copyright">
+                &copy; 2024 Medireach.<i class="la la-heart text-danger"></i> All rights reserved
+           </div>
+        </div>
+    </footer>
+
+	<!-- Scripts -->
+	<script src="{% static 'assets/js/core/jquery.3.2.1.min.js' %}"></script>
+	<script src="{% static 'assets/js/core/popper.min.js' %}"></script>
+	<script src="{% static 'assets/js/core/bootstrap.min.js' %}"></script>
+	<script src="{% static 'assets/js/ready.min.js' %}"></script>
+</body>
+</html>

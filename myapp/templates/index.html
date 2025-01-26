@@ -1,0 +1,283 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<title>Medireach</title>
+	<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' />
+	<link rel="stylesheet" href="{% static 'assets/css/bootstrap.min.css' %}">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
+	<link rel="stylesheet" href="{% static 'assets/css/ready.css' %}">
+	<link rel="stylesheet" href="{% static 'assets/css/demo.css' %}">
+	<style>
+		.card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s;
+}
+
+.card:hover {
+    transform: scale(1.05);
+}
+
+.card-img-top {
+    height: 200px;
+    object-fit: cover;
+}
+
+.card-title {
+    font-weight: bold;
+    color: #007bff;
+}
+
+	</style>
+</head>
+<body>
+	<div class="wrapper">
+		<div class="main-header">
+			<div class="logo-header">
+				<a href="index.html" class="logo">
+					Welcome
+				</a>
+				<button class="navbar-toggler sidenav-toggler ml-auto" type="button" data-toggle="collapse" data-target="collapse" aria-controls="sidebar" aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<button class="topbar-toggler more"><i class="la la-ellipsis-v"></i></button>
+			</div>
+			<nav class="navbar navbar-header navbar-expand-lg">
+				<div class="container-fluid">
+					
+					<a style="margin-left: 710px; font-size: 32px; font-weight: 800;" class="navbar-brand" href="#">Medireach</a>
+			
+					<ul class="navbar-nav topbar-nav ml-md-auto align-items-center">
+						
+					</ul>
+				</div>
+			</nav>
+			
+			</div>
+			<div class="sidebar">
+				<div class="scrollbar-inner sidebar-wrapper">
+					<div class="user">
+						
+						<div class="info">
+							<a class="" data-toggle="collapse" href="#collapseExample" aria-expanded="true">
+								<span>
+									PROFILE
+									<span class="caret"></span>
+								</span>
+							</a>
+							<div class="clearfix"></div>
+
+							<div class="collapse in" id="collapseExample" aria-expanded="true" >
+								<ul class="nav">
+									
+									<li>
+										<a href="{% url 'profile_view' %}">
+											<span class="link-collapse">Edit Profile</span>
+										</a>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<ul class="nav">
+						<li class="nav-item active">
+							<a href="{% url 'index' %}">
+								<i class="la la-dashboard"></i>
+								<p>Home</p>
+							</a>
+						</li>
+						<li class="nav-item ">
+							<a href="{% url 'video_consultation_user' %}">
+								<i class="la la-hospital-o"></i>
+								<p>Request Consultation</p>
+							</a>
+						</li>
+						<li class="nav-item">
+							<a href="{% url 'medical_history' %}">
+								<i class="la la-history"></i>
+								<p>Medical history</p>
+							</a>
+						</li>
+						<li class="nav-item">
+							<a href="{% url 'prescription_view' %}">
+								<i class="la la-history"></i>
+								<p>prescription</p>
+							</a>
+						</li>
+						
+						
+						<li class="nav-item">
+							<a href="{% url 'signout' %}">
+								<i class="la la-sign-out"></i>
+								<p>Logout</p>
+							</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div class="main-panel">
+				<div class="content">
+					<div class="container-fluid">
+						<h4 class="page-title">Home</h4>
+						
+						<!-- Card for Welcome Content -->
+						<div class="card">
+							<div class="card-body">
+								<h5 class="card-title text-center">Welcome to Medireach</h5>
+								<p class="card-text text-center">
+									Medireach is a cutting-edge platform that brings healthcare to your fingertips. With the power of IoT, video consultations, and real-time monitoring, we are making healthcare more accessible, efficient, and effective.
+									Whether you're at home or in a remote area, Medireach connects you to experienced medical professionals for immediate advice, health monitoring, and prescriptions.
+								</p>
+							</div>
+						</div>
+						
+					</div>
+				</div>
+				
+						
+				<h4 style="margin-left: 30px;" class="page-title">What we offer !</h4>
+						<div class="container-fluid mt-5">
+							<div class="row">
+								<div class="col-md-4">
+									<div class="card">
+										<img class="card-img-top" src="{% static 'assets/img/consult.jpg' %}" alt="Video Consultation">
+										<div class="card-body">
+											<h5 class="card-title text-center">Video Consultation</h5>
+											<p class="card-text text-center">
+												Connect with doctors remotely through seamless video calls and get expert medical advice.
+											</p>
+										</div>
+									</div>
+								</div>
+								<div class="col-md-4">
+									<div class="card">
+										<img class="card-img-top" src="{% static 'assets/img/prescription.jpg' %}" alt="E-Prescription">
+										<div class="card-body">
+											<h5 class="card-title text-center">E-Prescription</h5>
+											<p class="card-text text-center">
+												Receive electronic prescriptions directly from your doctor to save time and effort.
+											</p>
+										</div>
+									</div>
+								</div>
+								<div class="col-md-4">
+									<div class="card">
+										<img class="card-img-top" src="{% static 'assets/img/werables.jpg' %}" alt="Real-Time Monitoring">
+										<div class="card-body">
+											<h5 class="card-title text-center">Real-Time Monitoring</h5>
+											<p class="card-text text-center">
+												Track vital signs in real-time using advanced sensors and IoT technology.
+											</p>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-3">
+								<div class="card card-stats card-warning">
+									<div class="card-body ">
+										<div class="row">
+											<div class="col-5">
+												<div class="icon-big text-center">
+													<i class="la la-user-md"></i>
+												</div>
+											</div>
+											<div class="col-7 d-flex align-items-center">
+												<div class="numbers">
+													<p class="card-category">Doctors Available</p>
+													<h4 class="card-title">25</h4>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-3">
+								<div class="card card-stats card-success">
+									<div class="card-body ">
+										<div class="row">
+											<div class="col-5">
+												<div class="icon-big text-center">
+													<i class="la la-calendar-check-o"></i>
+												</div>
+											</div>
+											<div class="col-7 d-flex align-items-center">
+												<div class="numbers">
+													<p class="card-category">Appointments Today</p>
+													<h4 class="card-title">45</h4>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-3">
+								<div class="card card-stats card-danger">
+									<div class="card-body">
+										<div class="row">
+											<div class="col-5">
+												<div class="icon-big text-center">
+													<i class="la la-heartbeat"></i>
+												</div>
+											</div>
+											<div class="col-7 d-flex align-items-center">
+												<div class="numbers">
+													<p class="card-category">Patients Monitored</p>
+													<h4 class="card-title">1,294</h4>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-3">
+								<div class="card card-stats card-primary">
+									<div class="card-body ">
+										<div class="row">
+											<div class="col-5">
+												<div class="icon-big text-center">
+													<i class="la la-medkit"></i>
+												</div>
+											</div>
+											<div class="col-7 d-flex align-items-center">
+												<div class="numbers">
+													<p class="card-category">Prescriptions Issued</p>
+													<h4 class="card-title">576</h4>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+							
+						<footer class="footer bg-light text-center py-3">
+							<div class="container">
+								<div class="copyright">
+									&copy; 2024 Medireach.<i class="la la-heart text-danger"></i> All rights reserved
+							   </div>
+							</div>
+				        </footer>
+			  
+
+</body>
+
+<script src="{% static 'assets/js/core/jquery.3.2.1.min.js' %}"></script>
+<script src="{% static 'assets/js/plugin/jquery-ui-1.12.1.custom/jquery-ui.min.js' %}"></script>
+<script src="{% static 'assets/js/core/popper.min.js' %}"></script>
+<script src="{% static 'assets/js/core/bootstrap.min.js' %}"></script>
+<script src="{% static 'assets/js/plugin/chartist/chartist.min.js' %}"></script>
+<script src="{% static 'assets/js/plugin/chartist/plugin/chartist-plugin-tooltip.min.js' %}"></script>
+<script src="{% static 'assets/js/plugin/bootstrap-toggle/bootstrap-toggle.min.js' %}"></script>
+<script src="{% static 'assets/js/plugin/jquery-mapael/jquery.mapael.min.js' %}"></script>
+<script src="{% static 'assets/js/plugin/jquery-mapael/maps/world_countries.min.js' %}"></script>
+<script src="{% static 'assets/js/plugin/chart-circle/circles.min.js' %}"></script>
+<script src="{% static 'assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js' %}"></script>
+<script src="{% static 'assets/js/ready.min.js' %}"></script>
+<script src="{% static 'assets/js/demo.js' %}"></script>
+
+</html>
