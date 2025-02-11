@@ -166,7 +166,7 @@
                                         {% if latest_prescription %}
                                             Prescription Details
                                         {% else %}
-                                            Enter Prescription
+                                           No Prescription Available
                                         {% endif %}
                                     </h5>
                                 </div>
@@ -177,27 +177,7 @@
                                         <p><strong>Medicine:</strong> {{ latest_prescription.medicine }}</p>
                                         <p><strong>Description:</strong> {{ latest_prescription.description }}</p>
                                         <p><strong>Created At:</strong> {{ latest_prescription.created_at }}</p>
-                                    {% else %}
-                                        <form method="POST" action="{% url 'upload_prescription' %}">
-                                            {% csrf_token %}
-                                            <div class="form-group">
-                                                <label for="patient_name">Patient Name</label>
-                                                <input type="text" class="form-control" id="patient_name" name="patient_name" required>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="disease_name">Disease Name</label>
-                                                <input type="text" class="form-control" id="disease_name" name="disease_name" required>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="medicine">Medicine</label>
-                                                <input type="text" class="form-control" id="medicine" name="medicine" required>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="description">Description</label>
-                                                <textarea class="form-control" id="description" name="description" rows="4" required></textarea>
-                                            </div>
-                                            <button type="submit" class="btn btn-primary">Upload Prescription</button>
-                                        </form>
+                                   
                                     {% endif %}
                                 </div>
                             </div>

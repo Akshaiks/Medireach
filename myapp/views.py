@@ -63,6 +63,7 @@ def sign_up(request):
 
 def login_view(request):
     if request.method == "POST":
+        request.session.flush()
         username = request.POST['username']
         print(username)
         password = request.POST['password']
@@ -79,7 +80,7 @@ def login_view(request):
             
             if user.password == password:  # Compare plain-text password
                 request.session['username'] = username
-                initialize_mqtt(request)
+                
                 
                 return HttpResponse('<script>alert("Login successful"); window.location.href="/index/";</script>')
             else:
@@ -131,7 +132,8 @@ def send_link(request, request_id):
     
     if request.method == "POST":
         # Default Google Meet URL
-        gmeet_url = "https://meet.google.com/iyp-sbtj-gyu"  # Your default URL
+        gmeet_url = "https://meet.google.com/iyp-sbtj-gyu"
+        gmeet_urll = "https://meet.google.com/landing?hs=197&authuser=0"  # Your default URL
 
         VideoConsultation.objects.create(
             request=consultation_request,
@@ -139,9 +141,9 @@ def send_link(request, request_id):
             username=consultation_request.username,
             request_time=consultation_request.request_time
         )
+        
 
-
-        return redirect(gmeet_url)
+        return redirect(gmeet_urll)
         
  
     return render(request, 'video_consultation_doctor.html', {'consultation_request': consultation_request})
@@ -163,6 +165,7 @@ def video_consultation_user(request):
     print(username)
     
     video_consultation = VideoConsultation.objects.filter(username=username).first()
+    initialize_mqtt(request)
     
     print(video_consultation)  # Debugging line to check if data is fetched correctly.
     
