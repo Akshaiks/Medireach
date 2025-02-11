@@ -506,3 +506,7 @@ def update_password(request):
             return redirect('login_view')
     return redirect('login_view')
 
+
+
+    #just checking this views
+
