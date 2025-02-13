@@ -48,4 +48,7 @@ urlpatterns = [
     path('forgot_password/', forgot_password, name='forgot_password'),
     path('update_password/', update_password, name='update_password'),
 
+    path('prescription/',prescription, name='prescription'),
+    path('video_consultation_doctor/',video_consultation_doctor,name='video_consultation_doctor')
+
 ]

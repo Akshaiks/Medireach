@@ -37,7 +37,7 @@
 	<div class="wrapper">
 		<div class="main-header">
 			<div class="logo-header">
-				<a href="index.html" class="logo">
+				<a href="{% url 'index' %}" class="logo">
 					Welcome
 				</a>
 				<button class="navbar-toggler sidenav-toggler ml-auto" type="button" data-toggle="collapse" data-target="collapse" aria-controls="sidebar" aria-expanded="false" aria-label="Toggle navigation">
@@ -48,7 +48,7 @@
 			<nav class="navbar navbar-header navbar-expand-lg">
 				<div class="container-fluid">
 					
-					<a style="margin-left: 710px; font-size: 32px; font-weight: 800;" class="navbar-brand" href="#">Medireach</a>
+					<a style="margin-left: 525px; font-size: 32px; font-weight: 800;" class="navbar-brand" href="#">Medireach</a>
 			
 					<ul class="navbar-nav topbar-nav ml-md-auto align-items-center">
 						
@@ -120,6 +120,7 @@
 						<div class="container-fluid mt-5">
 							<div class="row">
 								<div class="col-md-4">
+									<a href="{% url 'video_consultation_doctor' %}" style="text-decoration: none; color: inherit;">
 									<div class="card">
 										<img class="card-img-top" src="{% static 'assets/img/consult.jpg' %}" alt="Video Consultation">
 										<div class="card-body">
@@ -129,8 +130,10 @@
 											</p>
 										</div>
 									</div>
+									</a>
 								</div>
 								<div class="col-md-4">
+									<a href="{% url 'prescription_d' %}" style="text-decoration: none; color: inherit;">
 									<div class="card">
 										<img class="card-img-top" src="{% static 'assets/img/prescription.jpg' %}" alt="E-Prescription">
 										<div class="card-body">
@@ -140,8 +143,10 @@
 											</p>
 										</div>
 									</div>
+									</a>
 								</div>
 								<div class="col-md-4">
+									<a href="{% url 'medical_history_d' %}" style="text-decoration: none; color: inherit;">
 									<div class="card">
 										<img class="card-img-top" src="{% static 'assets/img/werables.jpg' %}" alt="Real-Time Monitoring">
 										<div class="card-body">
@@ -151,6 +156,7 @@
 											</p>
 										</div>
 									</div>
+									</a>
 								</div>
 							</div>
 						</div>

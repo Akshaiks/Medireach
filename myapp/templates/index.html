@@ -48,7 +48,7 @@
 			<nav class="navbar navbar-header navbar-expand-lg">
 				<div class="container-fluid">
 					
-					<a style="margin-left: 710px; font-size: 32px; font-weight: 800;" class="navbar-brand" href="#">Medireach</a>
+					<a style="margin-left: 525px; font-size: 32px; font-weight: 800;" class="navbar-brand" href="#">Medireach</a>
 			
 					<ul class="navbar-nav topbar-nav ml-md-auto align-items-center">
 						
@@ -142,17 +142,20 @@
 						<div class="container-fluid mt-5">
 							<div class="row">
 								<div class="col-md-4">
-									<div class="card">
-										<img class="card-img-top" src="{% static 'assets/img/consult.jpg' %}" alt="Video Consultation">
-										<div class="card-body">
-											<h5 class="card-title text-center">Video Consultation</h5>
-											<p class="card-text text-center">
-												Connect with doctors remotely through seamless video calls and get expert medical advice.
-											</p>
+									<a href="{% url 'video_consultation_user' %}" style="text-decoration: none; color: inherit;">
+										<div class="card">
+											<img class="card-img-top" src="{% static 'assets/img/consult.jpg' %}" alt="Video Consultation">
+												<div class="card-body">
+													<h5 class="card-title text-center">Video Consultation</h5>
+													p class="card-text text-center">
+													Connect with doctors remotely through seamless video calls and get expert medical advice.
+												</p>
+											</div>
 										</div>
-									</div>
+									</a>
 								</div>
 								<div class="col-md-4">
+									<a href="{% url 'prescription' %}" style="text-decoration: none; color: inherit;">
 									<div class="card">
 										<img class="card-img-top" src="{% static 'assets/img/prescription.jpg' %}" alt="E-Prescription">
 										<div class="card-body">
@@ -162,8 +165,10 @@
 											</p>
 										</div>
 									</div>
+									</a>
 								</div>
 								<div class="col-md-4">
+									<a href="{% url 'medical_history' %}" style="text-decoration: none; color: inherit;">
 									<div class="card">
 										<img class="card-img-top" src="{% static 'assets/img/werables.jpg' %}" alt="Real-Time Monitoring">
 										<div class="card-body">
@@ -173,6 +178,7 @@
 											</p>
 										</div>
 									</div>
+									</a>
 								</div>
 							</div>
 						</div>

@@ -511,3 +511,9 @@ def update_password(request):
 
     #just checking this views
 
+def prescription(request):
+    return render(request, 'prescription.html')
+    
+def video_consultation_doctor(request):
+    return render(request, 'video_consultation_doctor.html')
+    
