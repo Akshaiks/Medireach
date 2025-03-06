@@ -131,20 +131,17 @@ def send_link(request, request_id):
     consultation_request = get_object_or_404(VideoConsultationRequest, id=request_id)
     
     if request.method == "POST":
-        # Default Google Meet URL
-        gmeet_url = "https://meet.google.com/iyp-sbtj-gyu"
+        gmeet_url = "https://meet.google.com/iyp-sbtj-gyu"  # Default Google Meet URL
 
-        #gmeet_urll = "https://meet.google.com/landing?hs=197&authuser=0"  # Your default URL
-
+        # Save the meeting link in the database
         VideoConsultation.objects.create(
             request=consultation_request,
             gmeet_url=gmeet_url,
             username=consultation_request.username,
             request_time=consultation_request.request_time
         )
-        
-        return redirect(gmeet_url)
-        #return redirect(gmeet_urll)
+
+        return JsonResponse({"gmeet_url": gmeet_url})
         
  
     return render(request, 'video_consultation_doctor.html', {'consultation_request': consultation_request})

@@ -120,11 +120,13 @@
                                                     <td>{{ request.username }}</td>
                                                     <td>{{ request.request_time }}</td>
                                                     <td>
-                                                        <!-- Send Link Button -->
+                                                        <!-- Send Link Button 
                                                         <form method="POST" action="{% url 'send_link' request.id %}" style="display:inline;">
                                                             {% csrf_token %}
                                                             <button type="submit" class="btn btn-success">Send Link</button>
-                                                        </form>                                                        
+                                                        </form>         -->
+														<button type="button" class="btn btn-success" onclick="sendMeetLink('{{ request.id }}')">Send Link</button>
+                                               
                                                         <!-- Reject Button -->
                                                         <form method="POST" action="{% url 'reject_request' request.id %}" style="display:inline;">
                                                             {% csrf_token %}
@@ -158,5 +160,33 @@
 	<script src="{% static 'assets/js/core/popper.min.js' %}"></script>
 	<script src="{% static 'assets/js/core/bootstrap.min.js' %}"></script>
 	<script src="{% static 'assets/js/ready.min.js' %}"></script>
+
+	<script>
+		function sendMeetLink(requestId) {
+			if (!requestId) {
+				alert("Invalid Request ID");
+				return;
+			}
+	
+			// Send a request to the Django backend to get the Google Meet link
+			fetch(`/send_link/${requestId}/`, {
+				method: "POST",
+				headers: {
+					"X-CSRFToken": "{{ csrf_token }}", // Include CSRF token
+					"Content-Type": "application/json"
+				}
+			})
+			.then(response => response.json())
+			.then(data => {
+				if (data.gmeet_url) {
+					window.open(data.gmeet_url, '_blank'); // Open Google Meet in a new tab
+				} else {
+					alert("Failed to generate meeting link.");
+				}
+			})
+			.catch(error => console.error("Error:", error));
+		}
+	</script>
+	
 </body>
 </html>
