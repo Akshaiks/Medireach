@@ -120,12 +120,12 @@
                                                     <td>{{ request.username }}</td>
                                                     <td>{{ request.request_time }}</td>
                                                     <td>
-                                                        <!-- Send Link Button 
+                                                        
                                                         <form method="POST" action="{% url 'send_link' request.id %}" style="display:inline;">
                                                             {% csrf_token %}
                                                             <button type="submit" class="btn btn-success">Send Link</button>
-                                                        </form>         -->
-														<button type="button" class="btn btn-success" onclick="sendMeetLink('{{ request.id }}')">Send Link</button>
+                                                        </form>        
+														<!-- <button type="button" class="btn btn-success" onclick="sendMeetLink('{{ request.id }}')">Send Link</button> -->
                                                
                                                         <!-- Reject Button -->
                                                         <form method="POST" action="{% url 'reject_request' request.id %}" style="display:inline;">

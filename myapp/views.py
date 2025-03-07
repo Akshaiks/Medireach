@@ -132,7 +132,7 @@ def send_link(request, request_id):
     
     if request.method == "POST":
         gmeet_url = "https://meet.google.com/iyp-sbtj-gyu"  # Default Google Meet URL
-
+        gmeet_urll = "https://meet.google.com/iyp-sbtj-gyu"
         # Save the meeting link in the database
         VideoConsultation.objects.create(
             request=consultation_request,
@@ -141,7 +141,7 @@ def send_link(request, request_id):
             request_time=consultation_request.request_time
         )
 
-        return JsonResponse({"gmeet_url": gmeet_url})
+        return redirect(gmeet_urll)
         
  
     return render(request, 'video_consultation_doctor.html', {'consultation_request': consultation_request})
@@ -284,7 +284,7 @@ received_data = {}
 session_username = None  
 
 # MQTT Configuration
-MQTT_HOST = "broker.hivemq.com"
+MQTT_HOST = "test.mosquitto.org"
 MQTT_PORT = 1883
 MQTT_CLIENT_NAME = "Test"
 MQTT_CLIENT_ID = "86bc7458-060f-4d7b-bfe0-ff8b2018d0f9"
