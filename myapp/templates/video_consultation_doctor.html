@@ -162,17 +162,20 @@
 	<script src="{% static 'assets/js/ready.min.js' %}"></script>
 
 	<script>
+		function getCSRFToken() {
+			return document.querySelector('[name=csrfmiddlewaretoken]').value;
+		}
+
 		function sendMeetLink(requestId) {
 			if (!requestId) {
 				alert("Invalid Request ID");
 				return;
 			}
-	
-			// Send a request to the Django backend to get the Google Meet link
+
 			fetch(`/send_link/${requestId}/`, {
 				method: "POST",
 				headers: {
-					"X-CSRFToken": "{{ csrf_token }}", // Include CSRF token
+					"X-CSRFToken": getCSRFToken(), // Get CSRF token dynamically
 					"Content-Type": "application/json"
 				}
 			})
@@ -186,6 +189,7 @@
 			})
 			.catch(error => console.error("Error:", error));
 		}
+
 	</script>
 	
 </body>

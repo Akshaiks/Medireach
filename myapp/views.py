@@ -16,6 +16,7 @@ from myapp.models import *
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.http import HttpResponse
+from django.http import HttpResponseRedirect
 from .models import User
 
 
@@ -116,24 +117,22 @@ def request_send(request):
     return HttpResponse('<script>alert("Invalid request method."); window.history.back();</script>')
 
 
-
 def video_consultation_requests(request):
-    consultation_requests = VideoConsultationRequest.objects.all()
+    consultation_requests = VideoConsultationRequest.objects.all().order_by('-request_time')  # Sorting by date (newest first)
     print(consultation_requests)
 
-    # Pass the consultation requests to the template
     return render(request, 'video_consultation_doctor.html', {
         'consultation_requests': consultation_requests
     })
 
+from django.http import JsonResponse
 
 def send_link(request, request_id):
     consultation_request = get_object_or_404(VideoConsultationRequest, id=request_id)
     
     if request.method == "POST":
         gmeet_url = "https://meet.google.com/iyp-sbtj-gyu"  # Default Google Meet URL
-
-        # Save the meeting link in the database
+      
         VideoConsultation.objects.create(
             request=consultation_request,
             gmeet_url=gmeet_url,
@@ -141,10 +140,13 @@ def send_link(request, request_id):
             request_time=consultation_request.request_time
         )
 
+        print("saved")
+
+        # Return JSON instead of redirecting
         return JsonResponse({"gmeet_url": gmeet_url})
-        
- 
-    return render(request, 'video_consultation_doctor.html', {'consultation_request': consultation_request})
+
+    return JsonResponse({"error": "Invalid request"}, status=400)
+
 
 def reject_request(request, request_id):
     # Fetch the consultation request by ID
@@ -236,17 +238,13 @@ def upload_prescription(request):
 
 
 def prescription_view(request):
-  
     username = request.session.get('username')
 
-    # Retrieve the latest prescription for the user
-    latest_prescription = None
-    if username:
-        latest_prescription = Prescription.objects.filter(patient_name=username).order_by('-created_at').first()
-        print(latest_prescription)
+    # Retrieve all prescriptions for the user
+    prescriptions = Prescription.objects.filter(patient_name=username).order_by('-created_at') if username else []
 
     return render(request, 'prescription.html', {
-        'latest_prescription': latest_prescription,
+        'prescriptions': prescriptions,
         'username': username,
     })
 
@@ -284,7 +282,7 @@ received_data = {}
 session_username = None  
 
 # MQTT Configuration
-MQTT_HOST = "broker.hivemq.com"
+MQTT_HOST = "broker.emqx.io"
 MQTT_PORT = 1883
 MQTT_CLIENT_NAME = "Test"
 MQTT_CLIENT_ID = "86bc7458-060f-4d7b-bfe0-ff8b2018d0f9"

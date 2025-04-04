@@ -97,9 +97,13 @@
                     </div>
                 </div>
                 <!-- User selection section -->
-                <div id="user-buttons-container" class="row justify-content-center mb-3">
-                    <!-- Dynamically populated user buttons will appear here -->
+                <!-- User selection section -->
+                <div id="user-selection-container" class="row justify-content-center mb-3">
+                    <select id="userDropdown" class="form-control w-50">
+                        <option value="" disabled selected>Select a Patient</option>
+                    </select>
                 </div>
+
                 <div id="live-data-section" class="chart-section" style="display: block;">
                     <h3 class="text-center">Live Data</h3>
                     <canvas id="liveChart" width="400" height="200"></canvas>
@@ -127,7 +131,7 @@
     function initCharts() {
         const liveCtx = document.getElementById('liveChart').getContext('2d');
         liveChart = new Chart(liveCtx, {
-            type: 'line',
+            type: 'bar',
             data: {
                 labels: ['Temperature', 'Heart rate', 'SPO2', 'Systolic pressure', 'Diastolic pressure'],
                 datasets: [{
@@ -169,26 +173,45 @@
             }
         });
     }
-
     function fetchUserData(username) {
-        // Fetch live data for the selected username
-        fetch(`/live_sensor_data_d/${username}/`)
-            .then(response => response.json())
-            .then(data => {
-                // Update the live data chart
-                liveChart.data.datasets[0].data = [
-                    data.Temperature,
-                    data['Heart rate'],
-                    data['SPO2'],
-                    data['Systolic pressure'],
-                    data['Diastolic pressure']
-                ];
-                liveChart.update();
-            })
-            .catch(error => console.error('Error fetching live data:', error));
+    // Fetch live data for the selected username
+    fetch(`/live_sensor_data_d/${username}/`)
+    .then(response => response.json())
+    .then(data => {
+        const values = [
+            data.Temperature,
+            data['Heart rate'],
+            data['SPO2'],
+            data['Systolic pressure'],
+            data['Diastolic pressure']
+        ];
 
-        // Fetch historical data for the selected username
-        fetch(`/get_history_data_d/${username}/`)
+        // Define default and alert colors
+        const defaultColor = 'rgba(75, 192, 192, 0.2)';
+        const alertColor = 'rgba(255, 0, 0, 0.5)';
+
+        // Define threshold values for each sensor
+        const thresholds = {
+            Temperature: 95, // Fever threshold (in Celsius)
+            'Heart rate': 100, // High heart rate
+            SPO2: 100, // Low oxygen saturation
+            'Systolic pressure': 120, // High systolic pressure
+            'Diastolic pressure': 80 // High diastolic pressure
+        };
+
+        // Update the chart data and colors
+        liveChart.data.datasets[0].data = values;
+        liveChart.data.datasets[0].backgroundColor = values.map((val, index) => {
+            const sensorName = Object.keys(thresholds)[index];
+            return val >= thresholds[sensorName] ? alertColor : defaultColor;
+        });
+
+        liveChart.update();
+    })
+    .catch(error => console.error('Error fetching live data:', error));
+
+    // Fetch historical data for the selected username
+    fetch(`/get_history_data_d/${username}/`)
         .then(response => response.json())
         .then(data => {
             // Ensure data consistency
@@ -210,7 +233,7 @@
             historyChart.update();
         })
         .catch(error => console.error('Error fetching history data:', error));
-    }
+}
 
     function showLiveData() {
         document.getElementById('live-data-section').style.display = 'block';
@@ -221,6 +244,38 @@
         document.getElementById('live-data-section').style.display = 'none';
         document.getElementById('history-data-section').style.display = 'block';
     }
+
+    // Function to populate the dropdown list dynamically
+function populateUserDropdown(users) {
+    const dropdown = document.getElementById('userDropdown');
+    dropdown.innerHTML = '<option value="" disabled selected>Select a Patient</option>'; // Clear previous options
+
+    users.forEach(username => {
+        const option = document.createElement('option');
+        option.value = username;
+        option.textContent = username;
+        dropdown.appendChild(option);
+    });
+
+    // Attach an event listener to fetch data when a user is selected
+    dropdown.addEventListener('change', function () {
+        fetchUserData(this.value);
+    });
+}
+
+// Fetch available patients and populate the dropdown
+fetch('/get_users/')
+    .then(response => response.json())
+    .then(users => populateUserDropdown(users))
+    .catch(error => console.error('Error fetching users:', error));
+
+
+// Fetch available patients and populate the dropdown
+fetch('/get_users_d/')
+    .then(response => response.json())
+    .then(users => populateUserDropdown(users))
+    .catch(error => console.error('Error fetching users:', error));
+
 
     // Function to populate the list of usernames (buttons) dynamically
     function populateUserButtons(users) {

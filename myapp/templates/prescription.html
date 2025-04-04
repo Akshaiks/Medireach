@@ -157,35 +157,38 @@
 		<div style="margin-top: 50px;" class="main-panel">
             <div class="content">
                 <div class="container-fluid">
-                    <!-- Prescription Card -->
                     <div class="row justify-content-center">
-                        <div class="col-md-8">
-                            <div class="card">
-                                <div class="card-header">
-                                    <h5 class="card-title">
-                                        {% if latest_prescription %}
-                                            Prescription Details
-                                        {% else %}
-                                           No Prescription Available
-                                        {% endif %}
-                                    </h5>
+                        {% if prescriptions %}
+                            {% for prescription in prescriptions %}
+                                <div class="col-md-8 mb-4">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h5 class="card-title">Prescription Details</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <p><strong>Patient Name:</strong> {{ prescription.patient_name }}</p>
+                                            <p><strong>Disease Name:</strong> {{ prescription.disease_name }}</p>
+                                            <p><strong>Medicine:</strong> {{ prescription.medicine }}</p>
+                                            <p><strong>Description:</strong> {{ prescription.description }}</p>
+                                            <p><strong>Created At:</strong> {{ prescription.created_at }}</p>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="card-body">
-                                    {% if latest_prescription %}
-                                        <p><strong>Patient Name:</strong> {{ latest_prescription.patient_name }}</p>
-                                        <p><strong>Disease Name:</strong> {{ latest_prescription.disease_name }}</p>
-                                        <p><strong>Medicine:</strong> {{ latest_prescription.medicine }}</p>
-                                        <p><strong>Description:</strong> {{ latest_prescription.description }}</p>
-                                        <p><strong>Created At:</strong> {{ latest_prescription.created_at }}</p>
-                                   
-                                    {% endif %}
+                            {% endfor %}
+                        {% else %}
+                            <div class="col-md-8">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5 class="card-title">No Prescription Available</h5>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>
         </div>
+        
         
 
     <footer class="footer bg-light text-center py-3">
